@@ -1,0 +1,7 @@
+interface:
+  display_name: "PM Hub"
+  short_description: "统一处理产品经理分析、研究与执行任务"
+  default_prompt: "Use $pm-hub to analyze the product problem, pick the right PM workflows, and produce a clear action-oriented output."
+
+policy:
+  allow_implicit_invocation: true
