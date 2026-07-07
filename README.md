@@ -17,17 +17,12 @@
 ## 当前包含的 skill
 
 - `wechat-sales-organizer`
-- `a-share-paper-trading`
 - `drawio-generator`
-- `financial-analysis`
 - `find-skills`
 - `hatch-pet`
 - `ima-skill`
 - `prototype-demo-wizard`
-- `query-indicator`
 - `remotion`
-- `select-stock`
-- `watchlist-management`
 
 ## 重点：微信销售整理 skill
 
