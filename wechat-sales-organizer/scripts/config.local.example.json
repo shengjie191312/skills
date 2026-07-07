@@ -1,0 +1,60 @@
+{
+  "wechat": {
+    "window_title_contains": "",
+    "scroll_to_top_first": true,
+    "top_scroll_attempts": 18,
+    "max_screens": 40,
+    "scroll_pixels": 560,
+    "wait_after_scroll_ms": 450,
+    "open_image_wait_ms": 700,
+    "copy_image_wait_ms": 500,
+    "image_click_count": 2,
+    "keep_locator_screenshots": false,
+    "local_roots": [
+      "D:/微信/微信文件/xwechat_files"
+    ],
+    "dat_xor_keys": [
+      [248, 208, 169, 210]
+    ]
+  },
+  "order_rules": {
+    "default_sales_channel": "包展",
+    "nearby_message_window": 5,
+    "single_product_image_counts_as_order": true,
+    "price_rules": {
+      "70": 7000,
+      "68": 6800,
+      "13": 1300
+    },
+    "brands": [
+      "dior",
+      "chanel",
+      "lv",
+      "gucci",
+      "ysl",
+      "fendi",
+      "celine",
+      "prada",
+      "hermes",
+      "balenciaga",
+      "bottega",
+      "burberry",
+      "miu miu",
+      "loewe"
+    ]
+  },
+  "ai": {
+    "enabled": true,
+    "provider": "openai_compatible",
+    "api_key_env": "OPENAI_API_KEY",
+    "base_url": "https://api.openai.com/v1",
+    "model": "gpt-4.1-mini",
+    "timeout_seconds": 60
+  },
+  "tencent_docs": {
+    "enabled": false,
+    "sheet_url": "",
+    "api_base_url": "",
+    "access_token_env": "TENCENT_DOCS_TOKEN"
+  }
+}

@@ -1,0 +1,1498 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{PAGE_TITLE}}</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --surface: #fffaf2;
+      --surface-soft: #fbf4ea;
+      --surface-deep: #2b2118;
+      --text: #2b2118;
+      --muted: #74675d;
+      --subtle: #9c8d82;
+      --line: #e3d7ca;
+      --line-soft: #eee3d6;
+      --primary: #c96442;
+      --primary-strong: #a84f34;
+      --primary-soft: #f4e4dc;
+      --teal: #5f7666;
+      --teal-soft: #e7eee7;
+      --amber: #9c6b23;
+      --amber-soft: #f8ead1;
+      --danger: #9f3a2f;
+      --radius: 8px;
+      --shadow: 0 18px 42px rgba(79, 58, 39, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100dvh;
+      overflow-x: hidden;
+      background: linear-gradient(180deg, rgba(255, 250, 242, 0.86), rgba(246, 241, 232, 0.95) 340px), var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    button:hover { border-color: #b7c4d6; }
+    button:active { transform: translateY(1px); }
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    .option:focus-within,
+    .style-card:focus-within {
+      outline: 3px solid rgba(201, 100, 66, 0.2);
+      outline-offset: 2px;
+    }
+
+    .app {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 28px 24px 24px;
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+      padding: 10px 0 26px;
+      
+    }
+
+    .title-block {
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.18;
+      font-weight: 760;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 12px;
+      white-space: nowrap;
+      font-weight: 650;
+    }
+
+    .btn.primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fffaf2;
+    }
+
+    .btn.primary:hover {
+      border-color: var(--primary-strong);
+      background: var(--primary-strong);
+    }
+
+    .btn.ghost {
+      color: var(--muted);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 430px;
+      gap: 24px;
+      align-items: start;
+      padding-top: 22px;
+      min-width: 0;
+    }
+
+    .workspace > *,
+    .section,
+    .field,
+    .option,
+    .style-card {
+      min-width: 0;
+    }
+
+    .config {
+      display: grid;
+      gap: 16px;
+    }
+
+    .flowbar {
+      position: sticky;
+      top: 0;
+      z-index: 8;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid rgba(227, 215, 202, 0.86);
+      border-radius: 999px;
+      background: rgba(255, 250, 242, 0.82);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 8px 22px rgba(79, 58, 39, 0.06);
+    }
+
+    .flowbar button {
+      min-height: 36px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .flowbar button:hover,
+    .flowbar button.is-active {
+      background: #3a2b20;
+      color: #fffaf2;
+    }
+
+    .prompt-panel,
+    .section,
+    .summary-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 10px 24px rgba(79, 58, 39, 0.05);
+    }
+
+    .prompt-panel {
+      display: grid;
+      gap: 12px;
+      padding: 20px;
+    }
+
+    .prompt-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .prompt-head h2,
+    .section-title h2,
+    .summary-head h2 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .prompt-head p,
+    .section-title p,
+    .summary-head p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .prompt-input {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fffaf2;
+      color: var(--text);
+      padding: 10px 12px;
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .recommend-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid #ead5c9;
+      border-radius: var(--radius);
+      background: #f8ebe3;
+      color: #623321;
+    }
+
+    .recommend-line strong {
+      color: var(--primary-strong);
+    }
+
+    .section {
+      overflow: hidden;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line-soft);
+      background: var(--surface-soft);
+    }
+
+    .step-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 760;
+      font-size: 12px;
+    }
+
+    .section-title {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .section-body {
+      display: grid;
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 9px;
+    }
+
+    .field-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .field-title,
+    label {
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .style-card,
+    .option {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fffaf2;
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .style-card {
+      min-height: 152px;
+    }
+
+    .style-card input,
+    .option input,
+    .chip input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .style-content {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .style-content strong,
+    .option strong {
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .style-content span,
+    .option span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .palette {
+      display: flex;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .palette i {
+      width: 22px;
+      height: 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .tag {
+      justify-self: start;
+      min-height: 22px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .style-card:has(input:checked),
+    .option:has(input:checked) {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      box-shadow: 0 0 0 1px rgba(201, 100, 66, 0.18);
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .option-grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .option {
+      min-height: 76px;
+    }
+
+    .option-content {
+      display: grid;
+      align-content: start;
+      gap: 4px;
+      padding: 12px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fffaf2;
+      color: #344054;
+      cursor: pointer;
+    }
+
+    .chip span {
+      padding: 7px 12px;
+      font-size: 13px;
+    }
+
+    .chip:has(input:checked) {
+      border-color: rgba(15, 118, 110, 0.45);
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .text-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .summary-panel {
+      position: sticky;
+      top: 16px;
+      overflow: hidden;
+    }
+
+    .summary-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line-soft);
+      background: var(--surface-deep);
+      color: #fffaf2;
+    }
+
+    .summary-head p {
+      color: #d7c8ba;
+    }
+
+    .summary-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .summary-actions .btn {
+      min-height: 34px;
+      border-color: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fffaf2;
+    }
+
+    .summary-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line-soft);
+      background: #fffaf2;
+    }
+
+    .mini-stat {
+      display: grid;
+      gap: 2px;
+      padding: 9px;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      background: #fff7ee;
+    }
+
+    .mini-stat span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .mini-stat strong {
+      overflow-wrap: anywhere;
+    }
+
+    .summary {
+      margin: 0;
+      min-height: 500px;
+      max-height: calc(100dvh - 230px);
+      overflow: auto;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      padding: 14px 16px 16px;
+      color: #33261d;
+      background: linear-gradient(180deg, #fffaf2, #fff6ea);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 20;
+      max-width: min(360px, calc(100vw - 32px));
+      transform: translateY(12px);
+      opacity: 0;
+      border-radius: var(--radius);
+      background: var(--surface-deep);
+      color: #fffaf2;
+      padding: 10px 12px;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      box-shadow: var(--shadow);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 1180px) {
+      .workspace {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .summary-panel {
+        position: static;
+      }
+
+      .summary {
+        min-height: 320px;
+        max-height: none;
+      }
+
+      .style-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .app {
+        padding: 16px;
+      }
+
+      .topbar,
+      .prompt-input,
+      .text-grid,
+      .option-grid,
+      .option-grid.two,
+      .style-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .actions,
+      .summary-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .flowbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        border-radius: 16px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .section-head,
+      .prompt-head {
+        align-items: flex-start;
+      }
+
+      .summary-meta {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="title-block">
+        <span class="eyebrow">Prototype Wizard</span>
+        <h1>{{PAGE_TITLE}}</h1>
+        <p class="subtitle">{{PAGE_SUBTITLE}}</p>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" type="button" id="resetBtn">恢复推荐</button>
+        <button class="btn primary" type="button" id="copyBtn">复制确认单</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <form class="config" id="configForm">
+        <nav class="flowbar" aria-label="配置步骤">
+          <button class="is-active" type="button" data-scroll-target="step-demand">需求目标</button>
+          <button type="button" data-scroll-target="step-pages">场景用户</button>
+          <button type="button" data-scroll-target="step-style">风格体验</button>
+          <button type="button" data-scroll-target="step-reference">参考约束</button>
+        </nav>
+
+        <section class="prompt-panel">
+          <div class="prompt-head">
+            <div>
+              <h2>一句话需求</h2>
+              <p>你可以直接改这句话，系统会按关键词推荐更合适的原型风格。</p>
+            </div>
+          </div>
+          <div class="prompt-input">
+            <textarea id="prompt" name="prompt">{{PROMPT}}</textarea>
+            <button class="btn primary" type="button" id="recommendBtn">应用推荐方向</button>
+          </div>
+          <div class="recommend-line" id="recommendLine">推荐方向：<strong>{{RECOMMEND_LABEL}}</strong><span>{{RECOMMEND_REASON}}</span></div>
+        </section>
+
+        <section class="section" id="step-demand">
+          <div class="section-head">
+            <div class="section-title">
+              <span class="step-pill">1</span>
+              <div>
+                <h2>需求与目标</h2>
+                <p>先确认这个原型要服务什么场景。</p>
+              </div>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="text-grid">
+              <div class="field">
+                <label for="topic">主题</label>
+                <input id="topic" name="topic" type="text" value="{{TOPIC}}" />
+              </div>
+              <div class="field">
+                <label for="flow">核心流程</label>
+                <input id="flow" name="flow" type="text" value="{{FLOW}}" />
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">原型目标</div>
+                <span class="hint">单选</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="goal" value="需求评审/研发对齐" checked />
+                  <span class="option-content"><strong>需求评审</strong><span>重点对齐页面、字段、流程和边界。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="goal" value="流程验证/可用性讨论" />
+                  <span class="option-content"><strong>流程验证</strong><span>重点验证任务路径是否顺畅。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="goal" value="汇报演示/方案呈现" />
+                  <span class="option-content"><strong>汇报演示</strong><span>更强调完整度和展示质感。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">使用对象</div>
+                <span class="hint">可多选</span>
+              </div>
+              <div class="chip-row">
+                <label class="chip"><input type="checkbox" name="roles" value="业务运营" checked /><span>业务运营</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="产品经理" checked /><span>产品经理</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="研发/测试" checked /><span>研发测试</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="主管/审批人" /><span>审批人</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="学生/学习者" /><span>学生</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="教师/家长" /><span>教师家长</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="科普爱好者" /><span>科普爱好者</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="C 端用户" /><span>C端用户</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="内容浏览用户" /><span>浏览用户</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="创作者" /><span>创作者</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="目标用户" /><span>目标用户</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="运营/市场" /><span>运营市场</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="设计评审人" /><span>设计评审</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="业务用户" /><span>业务用户</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="数据分析师" /><span>分析师</span></label>
+                <label class="chip"><input type="checkbox" name="roles" value="管理者" /><span>管理者</span></label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="step-pages">
+          <div class="section-head">
+            <div class="section-title">
+              <span class="step-pill">2</span>
+              <div>
+                <h2>场景与用户</h2>
+                <p>先判断 B 端、C 端或混合场景，再决定页面密度和体验重点。</p>
+              </div>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">场景类型</div>
+                <span class="hint">单选，默认按需求推荐</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="scene" value="B 端 SaaS/管理后台" checked />
+                  <span class="option-content"><strong>B 端 SaaS</strong><span>后台、CRM、配置、权限和管理平台。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scene" value="B 端工作台/运营台" />
+                  <span class="option-content"><strong>B 端工作台</strong><span>运营、坐席、审批、工单和任务处理。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scene" value="数据看板/分析诊断" />
+                  <span class="option-content"><strong>数据看板</strong><span>指标、趋势、诊断、经营分析。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scene" value="AI 助手/智能流程" />
+                  <span class="option-content"><strong>AI 工作台</strong><span>对话、任务流、知识结果和自动化。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scene" value="C 端 App/小程序" />
+                  <span class="option-content"><strong>C 端 App</strong><span>会员、消费、打卡、下单和移动工具。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scene" value="C 端内容/社区" />
+                  <span class="option-content"><strong>内容社区</strong><span>推荐流、互动、关注、创作者和增长。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scene" value="官网/活动/转化页" />
+                  <span class="option-content"><strong>活动转化</strong><span>官网、活动、报名、预约和转化承接。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">面向对象</div>
+                <span class="hint">单选</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="audience" value="B 端组织用户：重视效率、权限、状态、批量操作" checked />
+                  <span class="option-content"><strong>B 端组织用户</strong><span>效率、权限、状态、批量处理优先。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="audience" value="C 端个人用户：重视路径短、情绪反馈、视觉吸引、移动触控" />
+                  <span class="option-content"><strong>C 端个人用户</strong><span>路径短、反馈强、移动触控友好。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="audience" value="混合场景：兼顾管理效率和用户体验" />
+                  <span class="option-content"><strong>混合场景</strong><span>桌面看效率，移动看任务路径。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">页面范围</div>
+                <span class="hint">单选</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="scope" value="单页核心流程" />
+                  <span class="option-content"><strong>单页流程</strong><span>适合快速验证一个动作。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scope" value="列表 + 详情 + 核心操作" checked />
+                  <span class="option-content"><strong>列表+详情</strong><span>适合多数 B 端评审。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scope" value="完整模块多流程页面" />
+                  <span class="option-content"><strong>完整模块</strong><span>包含多页面、多状态、多角色。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scope" value="首页主题推荐 + 知识详情 + 动画实验页" />
+                  <span class="option-content"><strong>知识科普</strong><span>适合公式、原理、动画和实验讲解。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scope" value="推荐首页 + 内容详情 + 互动操作" />
+                  <span class="option-content"><strong>内容互动</strong><span>适合浏览、收藏、评论和继续探索。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scope" value="首页 + 核心任务 + 结果反馈" />
+                  <span class="option-content"><strong>移动任务</strong><span>适合 C 端 App 和小程序核心任务。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scope" value="首页卖点 + 活动详情 + 转化操作" />
+                  <span class="option-content"><strong>活动转化</strong><span>适合官网、活动和报名预约。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scope" value="任务输入 + 生成过程 + 结果确认" />
+                  <span class="option-content"><strong>AI 任务</strong><span>适合输入、生成、确认和编辑。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="scope" value="指标总览 + 异常详情 + 诊断建议" />
+                  <span class="option-content"><strong>数据诊断</strong><span>适合指标、异常和结论输出。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">复杂度</div>
+                <span class="hint">单选</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="fidelity" value="低保真结构稿" />
+                  <span class="option-content"><strong>低保真</strong><span>重点看结构和路径。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="fidelity" value="中保真业务界面" checked />
+                  <span class="option-content"><strong>中保真</strong><span>字段、状态和操作可评审。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="fidelity" value="高保真可演示稿" />
+                  <span class="option-content"><strong>高保真</strong><span>适合汇报和方案呈现。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">关键交互</div>
+                <span class="hint">可多选</span>
+              </div>
+              <div class="chip-row">
+                <label class="chip"><input type="checkbox" name="features" value="搜索筛选" checked /><span>搜索筛选</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="详情查看" checked /><span>详情查看</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="新增/编辑" checked /><span>新增编辑</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="状态流转" checked /><span>状态流转</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="弹窗/抽屉" /><span>弹窗抽屉</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="图表统计" /><span>图表统计</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="主题搜索" /><span>主题搜索</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="知识详情" /><span>知识详情</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="动画演示" /><span>动画演示</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="参数调节" /><span>参数调节</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="内容搜索" /><span>内容搜索</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="点赞收藏" /><span>点赞收藏</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="评论互动" /><span>评论互动</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="快捷入口" /><span>快捷入口</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="核心操作" /><span>核心操作</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="状态反馈" /><span>状态反馈</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="结果页" /><span>结果页</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="转化按钮" /><span>转化按钮</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="表单提交" /><span>表单提交</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="任务输入" /><span>任务输入</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="生成状态" /><span>生成状态</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="结果编辑" /><span>结果编辑</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="引用查看" /><span>引用查看</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="指标筛选" /><span>指标筛选</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="异常钻取" /><span>异常钻取</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="导出分享" /><span>导出分享</span></label>
+                <label class="chip"><input type="checkbox" name="features" value="协作审批" /><span>协作审批</span></label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="step-style">
+          <div class="section-head">
+            <div class="section-title">
+              <span class="step-pill">3</span>
+              <div>
+                <h2>风格与体验</h2>
+                <p>选择视觉方向、色调、布局策略和关键体验侧重点。</p>
+              </div>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">推荐方向</div>
+                <span class="hint">单选，默认按需求推荐</span>
+              </div>
+              <div class="style-grid">
+                <label class="style-card">
+                  <input type="radio" name="style" value="清爽 B 端 SaaS：白底、克制、信息层级清晰，适合后台和管理平台" checked />
+                  <span class="style-content">
+                    <span class="tag">推荐</span>
+                    <strong>清爽 B 端 SaaS</strong>
+                    <span>后台、CRM、运营工具。关键词：清晰、稳定、低干扰。</span>
+                    <span class="palette"><i style="background:#ffffff"></i><i style="background:#2563eb"></i><i style="background:#0f766e"></i></span>
+                  </span>
+                </label>
+                <label class="style-card">
+                  <input type="radio" name="style" value="B 端工作台型：任务聚合、待办优先、协作流清晰，适合运营台和审批台" />
+                  <span class="style-content">
+                    <span class="tag">任务</span>
+                    <strong>B 端工作台型</strong>
+                    <span>运营台、审批台、工单。关键词：任务、协作、流转。</span>
+                    <span class="palette"><i style="background:#f8fafc"></i><i style="background:#334155"></i><i style="background:#0f766e"></i></span>
+                  </span>
+                </label>
+                <label class="style-card">
+                  <input type="radio" name="style" value="数据看板型：指标优先、图表清晰、异常突出，适合分析和监控场景" />
+                  <span class="style-content">
+                    <span class="tag">指标</span>
+                    <strong>数据看板型</strong>
+                    <span>报表、监控、诊断。关键词：指标、趋势、异常。</span>
+                    <span class="palette"><i style="background:#0f172a"></i><i style="background:#38bdf8"></i><i style="background:#22c55e"></i></span>
+                  </span>
+                </label>
+                <label class="style-card">
+                  <input type="radio" name="style" value="AI 工作台型：对话、任务流和知识结果并重，适合 AI 助手和智能流程" />
+                  <span class="style-content">
+                    <span class="tag">AI</span>
+                    <strong>AI 工作台型</strong>
+                    <span>AI 助手、知识库、研报。关键词：任务、对话、结果。</span>
+                    <span class="palette"><i style="background:#fafafa"></i><i style="background:#7c3aed"></i><i style="background:#06b6d4"></i></span>
+                  </span>
+                </label>
+                <label class="style-card">
+                  <input type="radio" name="style" value="C 端 App/小程序型：触控友好、路径短、反馈清晰，适合移动端体验" />
+                  <span class="style-content">
+                    <span class="tag">移动</span>
+                    <strong>C 端 App/小程序</strong>
+                    <span>会员、消费、打卡。关键词：轻量、触控、反馈。</span>
+                    <span class="palette"><i style="background:#f8fafc"></i><i style="background:#16a34a"></i><i style="background:#f59e0b"></i></span>
+                  </span>
+                </label>
+                <label class="style-card">
+                  <input type="radio" name="style" value="C 端内容/社区型：内容优先、沉浸浏览、互动反馈强，适合社区和增长场景" />
+                  <span class="style-content">
+                    <span class="tag">内容</span>
+                    <strong>C 端内容/社区</strong>
+                    <span>推荐流、社区、创作者。关键词：浏览、互动、增长。</span>
+                    <span class="palette"><i style="background:#fff7ed"></i><i style="background:#ea580c"></i><i style="background:#db2777"></i></span>
+                  </span>
+                </label>
+                <label class="style-card">
+                  <input type="radio" name="style" value="官网/活动转化型：首屏吸引、利益点明确、转化路径突出，适合活动和官网" />
+                  <span class="style-content">
+                    <span class="tag">转化</span>
+                    <strong>官网/活动页</strong>
+                    <span>活动、官网、报名。关键词：吸引、利益、转化。</span>
+                    <span class="palette"><i style="background:#fff1f2"></i><i style="background:#dc2626"></i><i style="background:#f97316"></i></span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">色调方向</div>
+                <span class="hint">单选</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="tone" value="蓝色系：可信、效率、科技，适合通用 B 端和企业服务" checked />
+                  <span class="option-content"><strong>蓝色系</strong><span>可信、效率、科技、企业服务。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="tone" value="绿色系：健康、增长、稳定，适合打卡、成长和稳健业务" />
+                  <span class="option-content"><strong>绿色系</strong><span>健康、增长、稳定、成长。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="tone" value="红色系：活动、提醒、消费、热度，适合促销和强转化" />
+                  <span class="option-content"><strong>红色系</strong><span>活动、提醒、消费、热度。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="tone" value="橙色/暖色系：亲和、内容、生活方式，适合 C 端和消费决策" />
+                  <span class="option-content"><strong>暖色系</strong><span>亲和、内容、生活方式。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="tone" value="黑白灰高级感：品牌、作品集、工具感，适合高质感展示" />
+                  <span class="option-content"><strong>黑白灰</strong><span>品牌、高级感、专业工具。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="tone" value="自定义品牌色：按用户提供品牌色、截图或参考设计系统生成" />
+                  <span class="option-content"><strong>自定义</strong><span>按品牌色、截图或参考图走。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">布局策略</div>
+                <span class="hint">单选</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="layout" value="桌面信息密集型：强调筛选、列表、详情、批量操作和状态管理" checked />
+                  <span class="option-content"><strong>桌面密集</strong><span>表格、筛选、详情、批量操作。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="layout" value="移动优先型：强调触控、底部导航、路径短和关键反馈" />
+                  <span class="option-content"><strong>移动优先</strong><span>触控、底部导航、短路径。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="layout" value="内容沉浸型：强调首屏内容、卡片流、浏览节奏和互动入口" />
+                  <span class="option-content"><strong>内容沉浸</strong><span>推荐流、卡片、互动和浏览。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="layout" value="任务流引导型：强调步骤、待办、进度、下一步动作和结果反馈" />
+                  <span class="option-content"><strong>任务引导</strong><span>步骤、待办、进度、下一步。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="layout" value="数据决策型：强调指标总览、趋势洞察、异常定位和钻取分析" />
+                  <span class="option-content"><strong>数据决策</strong><span>指标、趋势、异常、钻取。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">体验重点</div>
+                <span class="hint">可多选</span>
+              </div>
+              <div class="chip-row">
+                <label class="chip"><input type="checkbox" name="experience" value="快速完成" checked /><span>快速完成</span></label>
+                <label class="chip"><input type="checkbox" name="experience" value="强引导" /><span>强引导</span></label>
+                <label class="chip"><input type="checkbox" name="experience" value="强反馈" checked /><span>强反馈</span></label>
+                <label class="chip"><input type="checkbox" name="experience" value="转化路径" /><span>转化路径</span></label>
+                <label class="chip"><input type="checkbox" name="experience" value="内容浏览" /><span>内容浏览</span></label>
+                <label class="chip"><input type="checkbox" name="experience" value="数据洞察" /><span>数据洞察</span></label>
+                <label class="chip"><input type="checkbox" name="experience" value="协作审批" checked /><span>协作审批</span></label>
+                <label class="chip"><input type="checkbox" name="experience" value="异常处理" checked /><span>异常处理</span></label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">GSAP 动效</div>
+                <span class="hint">单选</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="gsap" value="不启用 GSAP：仅使用 CSS 和原生 JavaScript，适合严肃研发评审或性能敏感场景" />
+                  <span class="option-content"><strong>不启用</strong><span>适合严肃评审，减少外部依赖。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="gsap" value="克制动效：使用 GSAP 做页面进入、弹窗、状态反馈、指标计数等轻量微交互" checked />
+                  <span class="option-content"><strong>克制动效</strong><span>默认推荐，提升质感但不抢戏。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="gsap" value="汇报增强：使用 GSAP 时间轴强化模块入场、流程推进、指标滚动和方案亮点展示" />
+                  <span class="option-content"><strong>汇报增强</strong><span>适合领导汇报和客户演示。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="gsap" value="趣味演示：使用 GSAP 做滚动叙事、卡片翻转、路径高亮或文字动效，适合概念 Demo" />
+                  <span class="option-content"><strong>趣味演示</strong><span>适合创新方案，仍需保证可读。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">图表方案</div>
+                <span class="hint">单选</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="chart" value="智能按需：无图表场景不强行加入；涉及指标、趋势、对比、分布或看板时优先使用 ECharts 可交互图表" checked />
+                  <span class="option-content"><strong>智能按需</strong><span>默认推荐，避免为了炫技加图表。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="chart" value="不需要图表：只用列表、卡片、步骤和状态反馈表达信息" />
+                  <span class="option-content"><strong>不需要</strong><span>适合流程型、表单型原型。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="chart" value="原生轻量图表：使用 HTML/CSS/SVG/Canvas 做简单图形或参数曲线，减少外部依赖" />
+                  <span class="option-content"><strong>原生轻量</strong><span>适合公式演示、参数变化和小型图形。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="chart" value="ECharts 可交互图表：通过 CDN 引入 ECharts，提供 tooltip、legend、筛选/切换和加载失败降级" />
+                  <span class="option-content"><strong>ECharts</strong><span>适合看板、趋势、对比、分布和指标诊断。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">业务数据</div>
+                <span class="hint">单选</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="dataSource" value="AI 自动生成贴近业务的模拟数据" checked />
+                  <span class="option-content"><strong>AI 生成</strong><span>默认省事，字段按主题补全。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="dataSource" value="按我提供的字段和样例数据生成" />
+                  <span class="option-content"><strong>指定字段</strong><span>适合已有字段和指标口径。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="dataSource" value="参考截图/竞品中的字段结构生成" />
+                  <span class="option-content"><strong>参考材料</strong><span>从截图或竞品中抽字段。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="text-grid">
+              <div class="field">
+                <label for="fields">业务字段/指标</label>
+                <textarea id="fields" name="fields">{{FIELDS}}</textarea>
+              </div>
+              <div class="field">
+                <label for="states">状态覆盖</label>
+                <textarea id="states" name="states">{{STATES}}</textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="step-reference">
+          <div class="section-head">
+            <div class="section-title">
+              <span class="step-pill">4</span>
+              <div>
+                <h2>参考与约束</h2>
+                <p>补充截图、竞品、保留项和不能碰的边界。</p>
+              </div>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">参考材料</div>
+                <span class="hint">单选</span>
+              </div>
+              <div class="option-grid">
+                <label class="option">
+                  <input type="radio" name="reference" value="暂无参考，AI 合理设计" checked />
+                  <span class="option-content"><strong>暂无参考</strong><span>按主题和通用业务设计。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="reference" value="参考链接/竞品页面" />
+                  <span class="option-content"><strong>参考链接</strong><span>补充链接和借鉴点。</span></span>
+                </label>
+                <label class="option">
+                  <input type="radio" name="reference" value="参考截图/已有原型" />
+                  <span class="option-content"><strong>截图原型</strong><span>说明保留和修改范围。</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-row">
+                <div class="field-title">需要保留</div>
+                <span class="hint">可多选</span>
+              </div>
+              <div class="chip-row">
+                <label class="chip"><input type="checkbox" name="keep" value="整体信息架构" /><span>信息架构</span></label>
+                <label class="chip"><input type="checkbox" name="keep" value="核心字段内容" /><span>字段内容</span></label>
+                <label class="chip"><input type="checkbox" name="keep" value="主要交互方式" /><span>交互方式</span></label>
+                <label class="chip"><input type="checkbox" name="keep" value="品牌色/视觉风格" /><span>视觉风格</span></label>
+              </div>
+            </div>
+
+            <div class="text-grid">
+              <div class="field">
+                <label for="links">参考链接/截图说明</label>
+                <textarea id="links" name="links" placeholder="粘贴链接，或说明截图里要参考的部分"></textarea>
+              </div>
+              <div class="field">
+                <label for="changes">修改要求/禁忌</label>
+                <textarea id="changes" name="changes">{{CHANGES}}</textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+      </form>
+
+      <aside class="summary-panel" aria-labelledby="summaryTitle">
+        <div class="summary-head">
+          <div>
+            <h2 id="summaryTitle">实时确认单</h2>
+            <p>复制后发回当前对话，我会生成最终 HTML 原型。</p>
+          </div>
+          <div class="summary-actions">
+            <button class="btn" type="button" id="copyBtnMini">复制</button>
+          </div>
+        </div>
+        <div class="summary-meta">
+          <div class="mini-stat"><span>推荐方向</span><strong id="styleStat">清爽 B 端 SaaS</strong></div>
+          <div class="mini-stat"><span>页面范围</span><strong id="scopeStat">列表+详情</strong></div>
+          <div class="mini-stat"><span>复杂度</span><strong id="fidelityStat">中保真</strong></div>
+        </div>
+        <pre class="summary" id="summary" tabindex="0"></pre>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">已复制确认单</div>
+
+  <script>
+    const form = document.querySelector("#configForm");
+    const summary = document.querySelector("#summary");
+    const toast = document.querySelector("#toast");
+    const recommendLine = document.querySelector("#recommendLine");
+    const styleStat = document.querySelector("#styleStat");
+    const scopeStat = document.querySelector("#scopeStat");
+    const fidelityStat = document.querySelector("#fidelityStat");
+
+    const defaultValues = {
+      prompt: "{{PROMPT_JS}}",
+      topic: "{{TOPIC_JS}}",
+      flow: "{{FLOW_JS}}",
+      fields: "{{FIELDS_JS}}",
+      states: "{{STATES_JS}}",
+      links: "",
+      changes: "{{CHANGES_JS}}"
+    };
+
+    const styleRules = [
+      {
+        keyword: /(活动|落地页|官网|转化|报名|预约|领取|促销|618|双11|双十二|营销)/i,
+        label: "官网/活动页",
+        style: "官网/活动转化型：首屏吸引、利益点明确、转化路径突出，适合活动和官网",
+        scene: "官网/活动/转化页",
+        audience: "C 端个人用户：重视路径短、情绪反馈、视觉吸引、移动触控",
+        tone: "红色系：活动、提醒、消费、热度，适合促销和强转化",
+        layout: "内容沉浸型：强调首屏内容、卡片流、浏览节奏和互动入口",
+        experience: ["强引导", "强反馈", "转化路径"],
+        reason: "适合官网、活动、报名、预约、促销和强转化页面。"
+      },
+      {
+        keyword: /(物理|科普|原理|动画|学习|知识|课程|实验|公式|教学|教育|题库|训练|力学|电磁|光学|热学|内容|社区|推荐|关注|创作者|帖子|直播|短视频|动态|种草)/,
+        label: "C 端内容/社区",
+        style: "C 端内容/社区型：内容优先、沉浸浏览、互动反馈强，适合社区和增长场景",
+        scene: "C 端内容/社区",
+        audience: "C 端个人用户：重视路径短、情绪反馈、视觉吸引、移动触控",
+        tone: "蓝色系：可信、效率、科技，适合通用 B 端和企业服务",
+        layout: "内容沉浸型：强调首屏内容、卡片流、浏览节奏和互动入口",
+        experience: ["强引导", "强反馈", "内容浏览", "数据洞察"],
+        reason: "适合科普内容浏览、动画讲解、互动实验、社区内容和学习路径。"
+      },
+      {
+        keyword: /(App|小程序|移动|手机|会员|打卡|下单|支付|消费|用户|个人|生活|健身)/i,
+        label: "C 端 App/小程序",
+        style: "C 端 App/小程序型：触控友好、路径短、反馈清晰，适合移动端体验",
+        scene: "C 端 App/小程序",
+        audience: "C 端个人用户：重视路径短、情绪反馈、视觉吸引、移动触控",
+        tone: "绿色系：健康、增长、稳定，适合打卡、成长和稳健业务",
+        layout: "移动优先型：强调触控、底部导航、路径短和关键反馈",
+        experience: ["快速完成", "强引导", "强反馈"],
+        reason: "适合 C 端 App、小程序、移动工具、会员、消费、打卡和下单体验。"
+      },
+      {
+        keyword: /(AI|智能|助手|知识库|研报|对话|Copilot|Agent|自动)/i,
+        label: "AI 工作台型",
+        style: "AI 工作台型：对话、任务流和知识结果并重，适合 AI 助手和智能流程",
+        scene: "AI 助手/智能流程",
+        audience: "混合场景：兼顾管理效率和用户体验",
+        tone: "蓝色系：可信、效率、科技，适合通用 B 端和企业服务",
+        layout: "任务流引导型：强调步骤、待办、进度、下一步动作和结果反馈",
+        experience: ["快速完成", "强引导", "强反馈", "数据洞察"],
+        reason: "适合 AI 助手、智能流程、研报、知识库和任务自动化。"
+      },
+      {
+        keyword: /(数据|指标|监控|看板|报表|分析|诊断|趋势)/,
+        label: "数据看板型",
+        style: "数据看板型：指标优先、图表清晰、异常突出，适合分析和监控场景",
+        scene: "数据看板/分析诊断",
+        audience: "B 端组织用户：重视效率、权限、状态、批量操作",
+        tone: "蓝色系：可信、效率、科技，适合通用 B 端和企业服务",
+        layout: "数据决策型：强调指标总览、趋势洞察、异常定位和钻取分析",
+        experience: ["快速完成", "数据洞察", "异常处理"],
+        reason: "适合指标、监控、经营分析、报表和诊断类需求。"
+      },
+      {
+        keyword: /(工作台|运营台|坐席|审批|工单|任务处理|待办|协作|外勤)/,
+        label: "B 端工作台型",
+        style: "B 端工作台型：任务聚合、待办优先、协作流清晰，适合运营台和审批台",
+        scene: "B 端工作台/运营台",
+        audience: "B 端组织用户：重视效率、权限、状态、批量操作",
+        tone: "蓝色系：可信、效率、科技，适合通用 B 端和企业服务",
+        layout: "任务流引导型：强调步骤、待办、进度、下一步动作和结果反馈",
+        experience: ["快速完成", "协作审批", "异常处理"],
+        reason: "适合运营台、审批台、坐席台、工单和多角色协同。"
+      },
+      {
+        keyword: /(后台|管理|平台|CRM|权限|配置|运营|B端|SaaS|列表)/i,
+        label: "清爽 B 端 SaaS",
+        style: "清爽 B 端 SaaS：白底、克制、信息层级清晰，适合后台和管理平台",
+        scene: "B 端 SaaS/管理后台",
+        audience: "B 端组织用户：重视效率、权限、状态、批量操作",
+        tone: "蓝色系：可信、效率、科技，适合通用 B 端和企业服务",
+        layout: "桌面信息密集型：强调筛选、列表、详情、批量操作和状态管理",
+        experience: ["快速完成", "协作审批", "异常处理"],
+        reason: "适合后台、管理平台、CRM、运营工具和配置类需求。"
+      }
+    ];
+
+    function checkedValue(name) {
+      return form.querySelector(`[name="${name}"]:checked`)?.value || "由 AI 合理补全";
+    }
+
+    function checkedValues(name) {
+      const values = [...form.querySelectorAll(`[name="${name}"]:checked`)].map((item) => item.value);
+      return values.length ? values.join("、") : "由 AI 合理补全";
+    }
+
+    function textValue(name) {
+      return form.elements[name]?.value.trim() || "由 AI 合理补全";
+    }
+
+    function shortStyle(value) {
+      return value.split("：")[0] || value;
+    }
+
+    function recommendStyle() {
+      const prompt = textValue("prompt");
+      return styleRules.find((rule) => rule.keyword.test(prompt)) || styleRules[6];
+    }
+
+    function setRadioValue(name, value) {
+      const radio = [...form.querySelectorAll(`[name="${name}"]`)].find((item) => item.value === value);
+      if (radio) radio.checked = true;
+    }
+
+    function setCheckedValues(name, values) {
+      form.querySelectorAll(`[name="${name}"]`).forEach((item) => {
+        item.checked = values.includes(item.value);
+      });
+    }
+
+    function applyRecommendedStyle() {
+      const rule = recommendStyle();
+      setRadioValue("style", rule.style);
+      setRadioValue("scene", rule.scene);
+      setRadioValue("audience", rule.audience);
+      setRadioValue("tone", rule.tone);
+      setRadioValue("layout", rule.layout);
+      setCheckedValues("experience", rule.experience);
+      recommendLine.innerHTML = `推荐方向：<strong>${rule.label}</strong><span>${rule.reason}</span>`;
+      updateSummary();
+      showToast(`已应用推荐方向：${rule.label}`);
+    }
+
+    function buildSummary() {
+      return `原型生成确认单
+
+1. 主题：${textValue("topic")}
+2. 原型目标：${checkedValue("goal")}
+3. 使用对象：${checkedValues("roles")}
+4. 场景类型：${checkedValue("scene")}
+5. 面向对象：${checkedValue("audience")}
+6. 页面范围：${checkedValue("scope")}
+7. 核心流程：${textValue("flow")}
+8. 复杂度：${checkedValue("fidelity")}
+9. 视觉风格：${checkedValue("style")}
+10. 色调方向：${checkedValue("tone")}
+11. 布局策略：${checkedValue("layout")}
+12. 体验重点：${checkedValues("experience")}
+13. 业务数据：${checkedValue("dataSource")}；字段/指标：${textValue("fields")}
+14. 参考材料：${checkedValue("reference")}；补充：${textValue("links")}
+15. 需要保留：${checkedValues("keep")}
+16. 需要修改：${textValue("changes")}
+17. 交互要求：${checkedValues("features")}；覆盖状态：${textValue("states")}
+18. GSAP 动效：${checkedValue("gsap")}
+19. 图表方案：${checkedValue("chart")}
+20. 输出形式：单文件 HTML，使用 HTML、CSS、原生 JavaScript，可直接在浏览器打开；如启用 GSAP 或 ECharts，则通过 CDN 引入并尊重 prefers-reduced-motion / 加载失败降级
+21. 验收标准：核心流程可点击走通；桌面和移动端不重叠、不溢出；字段、状态、异常和成功反馈完整；动效和图表不影响阅读和操作。`;
+    }
+
+    function updateSummary() {
+      summary.textContent = buildSummary();
+      styleStat.textContent = shortStyle(checkedValue("style"));
+      scopeStat.textContent = checkedValue("scope").replace("列表 + 详情 + 核心操作", "列表+详情").replace("完整模块多流程页面", "完整模块");
+      fidelityStat.textContent = checkedValue("fidelity").replace("业务界面", "").replace("可演示稿", "");
+      const rule = recommendStyle();
+      recommendLine.innerHTML = `推荐方向：<strong>${rule.label}</strong><span>${rule.reason}</span>`;
+    }
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    async function copySummary() {
+      updateSummary();
+      try {
+        await navigator.clipboard.writeText(summary.textContent);
+        showToast("已复制确认单");
+      } catch (error) {
+        const range = document.createRange();
+        range.selectNodeContents(summary);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        showToast("已选中确认单，可手动复制");
+      }
+    }
+
+    function resetForm() {
+      form.reset();
+      Object.entries(defaultValues).forEach(([key, value]) => {
+        if (form.elements[key]) form.elements[key].value = value;
+      });
+      updateSummary();
+      showToast("已恢复推荐配置");
+    }
+
+    form.addEventListener("input", updateSummary);
+    form.addEventListener("change", updateSummary);
+    document.querySelector("#copyBtn").addEventListener("click", copySummary);
+    document.querySelector("#copyBtnMini").addEventListener("click", copySummary);
+    document.querySelector("#resetBtn").addEventListener("click", resetForm);
+    document.querySelector("#recommendBtn").addEventListener("click", applyRecommendedStyle);
+    document.querySelectorAll("[data-scroll-target]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-scroll-target]").forEach((item) => item.classList.remove("is-active"));
+        button.classList.add("is-active");
+        document.querySelector(`#${button.dataset.scrollTarget}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      document.querySelectorAll("[data-scroll-target]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.scrollTarget === visible.target.id);
+      });
+    }, { rootMargin: "-20% 0px -65% 0px", threshold: [0.1, 0.35, 0.6] });
+
+    ["step-demand", "step-pages", "step-style", "step-reference"].forEach((id) => {
+      const section = document.querySelector(`#${id}`);
+      if (section) observer.observe(section);
+    });
+    updateSummary();
+  </script>
+</body>
+</html>
+

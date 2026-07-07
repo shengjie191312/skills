@@ -1,0 +1,29 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Runtime outputs
+runs/
+outputs/
+output/
+*.log
+
+# Local secrets and machine-only config
+.env
+.env.*
+config.local.json
+*.key
+*_key.txt
+*secret*
+*token*
+
+# Dependencies and package caches
+node_modules/
+.venv/
+venv/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

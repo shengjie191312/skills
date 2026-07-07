@@ -1,0 +1,4 @@
+interface:
+  display_name: "微信销售整理"
+  short_description: "从微信合并聊天记录自动整理销售明细 Excel 表"
+  default_prompt: "Use $wechat-sales-organizer to generate a sales-detail Excel file from the currently foreground WeChat chat window or merged chat record."
