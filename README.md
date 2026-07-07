@@ -21,8 +21,27 @@
 - `find-skills`
 - `hatch-pet`
 - `ima-skill`
+- `product-design`
 - `prototype-demo-wizard`
 - `remotion`
+
+## Product Design skill
+
+路径：
+
+```text
+product-design/
+```
+
+用途：
+
+- 产品体验分析、页面审查、流程审查
+- UI/UX 设计和改版
+- 根据截图、Figma、网页或现有代码做原型
+- 把视觉稿还原成可运行页面
+- 对原型做设计自检
+
+这个 skill 是从 Codex 自带 Product Design 插件备份出来的。根目录有中文入口说明，真正的工作规则在 `product-design/skills/index/SKILL.md` 和对应子 skill 里。
 
 ## 重点：微信销售整理 skill
 
